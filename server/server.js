@@ -11,6 +11,9 @@ console.log("DIST:", DIST)
 const server = http.createServer((req, res) => {
 
   console.log(req.url)
+    var filePath = '.' + req.url
+    var extname = path.extname(filePath)
+
   if (req.url === "/") {
     fs.readFile(path.join(DIST, "index.html"))
       .then((content, err) => {
@@ -22,6 +25,20 @@ const server = http.createServer((req, res) => {
           "Content-Type": "text/html"
         })
         res.end(content)
+      })
+  }
+
+  if (extname === ".jpg") {
+      fs.readFile(path.join(DIST, req.url))
+          .then((content, err) => {
+          if(err){
+              console.log(err);
+              return ;
+          }
+          res.writeHead(200, {
+              "Content-Type": "image/jpg"
+          })
+          res.end(content)
       })
   }
 
